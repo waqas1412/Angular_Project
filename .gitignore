@@ -44,3 +44,4 @@ Thumbs.db
 .vscode/tasks.json
 .vscode/
 .editorconfig
+package-lock.json

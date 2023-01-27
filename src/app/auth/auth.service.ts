@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import { User, UserModel } from '../shared/user.model';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 export interface AuthResponseData {
   kind: string;
@@ -20,13 +21,12 @@ export interface AuthResponseData {
 export class AuthService {
   user = new BehaviorSubject<UserModel>(null!);
   private tokenExpirationTimer: any;
-
   constructor(private httpClient: HttpClient, private router: Router) {}
   signup(user: User) {
     return this.httpClient
       .post<AuthResponseData>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=\n' +
-          'AIzaSyAeW7lMIs7qnLPud8UDIN0S_wNFUya7V4I',
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
+          environment.firebaseAPIKey,
         { email: user.email, password: user.password, returnSecureToken: true }
       )
       .pipe(
@@ -44,8 +44,8 @@ export class AuthService {
   login(user: User) {
     return this.httpClient
       .post<AuthResponseData>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=\n' +
-          'AIzaSyAeW7lMIs7qnLPud8UDIN0S_wNFUya7V4I',
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
+          environment.firebaseAPIKey,
         { email: user.email, password: user.password, returnSecureToken: true }
       )
       .pipe(

@@ -77,16 +77,13 @@ import { createReducer, on } from '@ngrx/store';
 import * as ShoppingListActions from './shopping-list.action';
 import {Ingredient} from "../../shared/ingredient.model";
 
-export interface AppState {
-  shoppingList: State
-}
-export interface State {
+export interface ShoppingListState {
   ingredients: Ingredient[];
   editedIngredient: Ingredient | null;
   editedIngredientIndex: number;
 }
 
-const initialState: State = {
+const initialState: ShoppingListState = {
   ingredients: [
     new Ingredient('Apples', 5),
     new Ingredient('Tomatoes', 10),

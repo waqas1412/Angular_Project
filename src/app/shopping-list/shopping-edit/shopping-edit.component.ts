@@ -3,6 +3,8 @@ import { Ingredient } from '../../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import {Store} from "@ngrx/store";
+import * as ShoppingListActions from '../store/shopping-list.action'
 
 @Component({
   selector: 'app-shopping-edit',
@@ -11,7 +13,8 @@ import { Subscription } from 'rxjs';
 })
 export class ShoppingEditComponent implements OnInit, OnDestroy {
   @ViewChild('f') shoppingForm!: NgForm;
-  constructor(private shoppingListService: ShoppingListService) {}
+  constructor(private shoppingListService: ShoppingListService,
+              private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>) {}
   subscription!: Subscription;
   editMode: boolean = false;
   selectedItemIndex!: number;
@@ -33,12 +36,14 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
     const value = form.value;
     const newIngredient = new Ingredient(value.name, value.amount);
     if (this.editMode) {
-      this.shoppingListService.updateIngredient(
-        this.selectedItemIndex,
-        newIngredient
-      );
+      // this.shoppingListService.updateIngredient(
+      //   this.selectedItemIndex,
+      //   newIngredient
+      // );
+      this.store.dispatch(ShoppingListActions.UpdateIngredient({index: this.selectedItemIndex, ingredient: newIngredient}));
     } else {
-      this.shoppingListService.addIngredient(newIngredient);
+      // this.shoppingListService.addIngredient(newIngredient);
+      this.store.dispatch(ShoppingListActions.AddIngredient({ingredient: newIngredient}));
     }
     this.editMode = false;
     form.reset();
@@ -48,7 +53,8 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
     this.editMode = false;
   }
   onDelete() {
-    this.shoppingListService.deleteIngredient(this.selectedItemIndex);
+    // this.shoppingListService.deleteIngredient(this.selectedItemIndex);
+    this.store.dispatch(ShoppingListActions.DeleteIngredient({index: this.selectedItemIndex}));
     this.shoppingForm.reset();
     this.editMode = false;
   }
